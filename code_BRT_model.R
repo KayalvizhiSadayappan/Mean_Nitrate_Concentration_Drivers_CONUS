@@ -1,14 +1,8 @@
 library(xgboost)
 library(Metrics)
-library(hydroGOF)
 library(MLmetrics)
 library(caret)
-library(corrplot)
-library(RColorBrewer)
-library(dendextend)
-library(iml)
 library(readxl)
-library(metR)
 
 
 Data <- read_excel("Data_Mean_Nitrate_Concentration_Drivers_CONUS.xlsx", 
@@ -44,13 +38,11 @@ set.seed(123)
 fit <- xgboost(dtrain
                , max_depth = 7
                , eta = 0.005
-               , nrounds = 1400#500
+               , nrounds = 1400
                , subsample = .8
                , colsample_bytree = .9
                ,min_child_weight=9
                ,gamma=0
-               #,reg_lambda=2.5
-               #,reg_alpha=0.5
                , booster = "gbtree"
                , eval_metric = "rmse"
                , objective="reg:linear")
@@ -62,3 +54,20 @@ R2_Score(y_hat_xgb,test_label) #Test R2 score
 rmse(y_hat_xgb,test_label) #Test RMSE
 R2_Score(xgb.train,train_label)#Train R2 score
 rmse(xgb.train,train_label)#Train RMSE
+
+#Calculate mean nitrate concentration for a particular basin 
+#Insert NITR_APP_KG_SQKM (Nrate or nitrate application rate) in kg/km2/yr, 
+#       DEVNLCD06 (Aurban% in paper, Percent developed area) in %,
+#       PPTAVG_BASIN (MAP or Mean Annual Precipitation) in cm/yr,
+#       T_AVG_BASIN (MAT or Mean Annual Temperature) in degree C,
+#       SANDAVE (Sand% or Sand content) in %.
+
+own_data<-data.frame(NITR_APP_KG_SQKM=5500,
+                     DEVNLCD06=20,
+                     T_AVG_BASIN=15,
+                     PPTAVG_BASIN=100,
+                     SANDAVE=50
+                     )
+predicted_log_conc <- predict(fit,xgb.DMatrix(data =  data.matrix(own_data)))
+
+pred_conc=10^predicted_log_conc
