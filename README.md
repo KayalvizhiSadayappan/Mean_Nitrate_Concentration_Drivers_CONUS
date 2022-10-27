@@ -1,6 +1,6 @@
 # Mean_Nitrate_Concentration_Drivers_CONUS
 
-Here, the mean nitrate concentrations and the site characteristics of 2061 sites used in the paper "Sadayappan, Kerins, Li" are available along with the R code to construct the calibrated Boosted Regression Tree model used to predice long term mean nitrate concentrations across CONUS in the paper. 
+Here, the mean nitrate concentrations and the site characteristics of 2061 sites used in the paper "Sadayappan, Kerins, Shen, Li" are available along with the R code to construct the calibrated Boosted Regression Tree model used to predice long term mean nitrate concentrations across CONUS in the paper. 
 
 Nitrate concentrations were downloaded from United States Geological Survey (USGS) Water Data (U.S. Geological Survey, 2016) using the USGS-R dataRetrieval package (Hirsch and De Cicco 2015). Mean nitrate levels were calculated as arithmetic mean for those sites with atleast 10 measurements after removing below detection limit measurements. 
 
