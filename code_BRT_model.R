@@ -55,7 +55,6 @@ rmse(y_hat_xgb,test_label) #Test RMSE
 R2_Score(xgb.train,train_label)#Train R2 score
 rmse(xgb.train,train_label)#Train RMSE
 
-#Calculate mean nitrate concentration for a particular basin 
 #Insert NITR_APP_KG_SQKM (Nrate or nitrate application rate) in kg/km2/yr, 
 #       DEVNLCD06 (Aurban% in paper, Percent developed area) in %,
 #       PPTAVG_BASIN (MAP or Mean Annual Precipitation) in cm/yr,
@@ -68,6 +67,16 @@ own_data<-data.frame(NITR_APP_KG_SQKM=5500,
                      PPTAVG_BASIN=100,
                      SANDAVE=50
                      )
-predicted_log_conc <- predict(fit,xgb.DMatrix(data =  data.matrix(own_data)))
 
-pred_conc=10^predicted_log_conc
+#Calculate mean nitrate concentration for a particular basin using median BRT models
+predicted_log_conc_medianBRT <- predict(fit,xgb.DMatrix(data =  data.matrix(own_data)))
+pred_conc_medianBRT <- 10^predicted_log_conc
+
+#Calculate mean nitrate concentration for a particular basin using 1000 BRT models
+xgboost_1000models=readRDS(file = "xgboost_1000models.rds")
+
+predicted_log_conc=rep(NA,1000)
+for (k in 1:1000){
+  predicted_log_conc[k] <- predict(xgboost_1000models[[k]],xgb.DMatrix(data =  data.matrix(own_data)))
+}
+predicted_conc <- 10^(predicted_log_conc)
