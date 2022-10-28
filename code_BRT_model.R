@@ -73,7 +73,39 @@ predicted_log_conc_medianBRT <- predict(fit,xgb.DMatrix(data =  data.matrix(own_
 pred_conc_medianBRT <- 10^predicted_log_conc
 
 #Calculate mean nitrate concentration for a particular basin using 1000 BRT models
-xgboost_1000models=readRDS(file = "xgboost_1000models.rds")
+
+for (i in 1:1000){
+  set.seed(i+123)
+  
+  training.samples <- sample(1:nrow(pred), ntrain, replace=FALSE)
+  
+  train_data  <- pred[training.samples, ]
+  test_data <- pred[-training.samples, ]
+  
+  process_train <- caret::preProcess(train_data, method = c("center", "scale"))
+  train_data <- predict(process_train,train_data)#rf
+  test_data <- predict(process_train,test_data)
+  
+  train_label <- obs_y[training.samples]
+  test_label <- obs_y[-training.samples]
+  
+  dtrain <- xgb.DMatrix(data = data.matrix(train_data), label= data.matrix(train_label))#XGBoost
+  dtest <- xgb.DMatrix(data =  data.matrix(test_data), label= data.matrix(test_label))
+  
+  set.seed(123)
+  fit <- xgboost(dtrain
+                 , max_depth = 7
+                 , eta = 0.005
+                 , nrounds = 1400
+                 , subsample = .8
+                 , colsample_bytree = .9
+                 ,min_child_weight=9
+                 ,gamma=0
+                 , booster = "gbtree"
+                 , eval_metric = "rmse"
+                 , objective="reg:linear")
+  xgboost_1000models[[i]]=fit
+}
 
 predicted_log_conc=rep(NA,1000)
 for (k in 1:1000){
