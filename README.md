@@ -6,7 +6,7 @@ Nitrate concentrations were downloaded from United States Geological Survey (USG
 
 Geospatial Attributes of Gages for Evaluating Streamflow (GAGES II) database (Falcone 2011) was used to get characteristics of the sites.
 
-Calculate mean nitrate concentration for ungauged basins: If you have nitrate application rate (Kg/Km2/yr), percent developed area (%), mean annual precipitation (cm/yr), mean annual temperature (degree C) and sand soil content (weight percentage), insert own values in "code_BRT_model" to get mean nitrate concentration as estimated by median model.
+Calculate mean nitrate concentration for ungauged basins: If you have nitrate application rate (Kg/Km2/yr), percent developed area (%), mean annual precipitation (cm/yr), mean annual temperature (degree C) and sand soil content (weight percentage), insert own values in "code_BRT_model" to get mean nitrate concentration as estimated by median model as well as mean concentrations as estimated by 1000 BRT models to get uncertainty range.
 
 References:
 
